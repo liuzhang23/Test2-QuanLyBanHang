@@ -1,0 +1,203 @@
+#include<iostream>
+#include<conio.h>
+using namespace std;
+
+class MatHang{
+	private:
+		string TenMatHang;
+		int SoLuongMatHang;
+		float DonGia;
+	public:
+		MatHang();
+		~MatHang();
+		void NhapThongTinMatHang();
+		void InThongTinMatHang();
+		float Tien();
+};
+
+MatHang::MatHang(){
+	TenMatHang = "";
+	SoLuongMatHang = 0;
+	DonGia = 0;
+}
+MatHang::~MatHang(){
+}
+void MatHang::NhapThongTinMatHang(){
+	cout<<"Nhap ten mat hang: "; fflush(stdin); getline (cin, TenMatHang);
+	cout<<"Nhap so luong: "; cin>>SoLuongMatHang;
+	cout<<"Nhap don gia: "; cin>>DonGia;
+}
+void MatHang::InThongTinMatHang(){
+	cout<<"Ten mat hang: "<<TenMatHang<<endl;
+	cout<<"So luong: "<<SoLuongMatHang<<endl;
+	cout<<"Don gia: "<<DonGia<<endl;
+}
+
+float MatHang::Tien(){
+	return (SoLuongMatHang*DonGia);
+}
+
+class HoaDon:public MatHang{
+	private:
+		string TenHoaDon;
+		int SoLuongMatHang;
+		MatHang *MH;
+	public:
+		HoaDon();
+		~HoaDon();
+		void NhapHoaDon();
+		void InHoaDon();
+		float TongTienMoiHoaDon();
+		float GiaMotMatHang();
+		string getTenHoaDon();
+};
+HoaDon::HoaDon(){
+	TenHoaDon = "";
+	SoLuongMatHang = 0;
+}
+HoaDon::~HoaDon(){
+}
+string HoaDon::getTenHoaDon(){
+	return TenHoaDon;
+}
+void HoaDon::NhapHoaDon(){
+		cout<<endl<<"Nhap ten hoa don: "; fflush(stdin); getline(cin,TenHoaDon);
+		cout<<"Nhap so luong mat hang: "; cin>>SoLuongMatHang;
+		MH = new MatHang [SoLuongMatHang];
+		for(int i=0; i<SoLuongMatHang; i++){
+			cout<<endl<<"Mat hang thu "<<i+1<<endl;
+			MH[i].NhapThongTinMatHang();
+			
+		}
+}
+void HoaDon::InHoaDon(){
+	cout<<endl<<"Ten hoa don: "<<TenHoaDon<<endl;
+	cout<<"So luong mat hang: "<<SoLuongMatHang<<endl;
+	for(int i=0; i<SoLuongMatHang; i++){
+		MH[i].InThongTinMatHang();
+		cout<<"Gia: "<<MH[i].Tien();
+		cout<<endl;
+	}
+}
+float HoaDon::TongTienMoiHoaDon(){
+	float TongTienHoaDon = 0;
+	for(int i=0; i<SoLuongMatHang; i++){
+		TongTienHoaDon =TongTienHoaDon + MH[i].Tien();
+	}
+	return TongTienHoaDon;
+}
+
+void NhapDanhSach(HoaDon *HD, int n){
+	for(int i=0; i<n; i++){
+		cout<<endl<<"Hoa don thu "<<i+1<<endl;
+		HD[i].NhapHoaDon();
+		cout<<endl;
+	}
+}
+void XuatDanhSach(HoaDon *HD, int n){
+	for (int i=0; i<n; i++){
+		cout<<endl<<"Hoa don thu "<<i+1<<endl;
+		HD[i].InHoaDon();
+		cout<<"----------------------------------------------"<<endl;
+		cout<<"Tong gia tien: "<<HD[i].TongTienMoiHoaDon()<<endl;
+		cout<<endl;
+	}
+}
+void MinMoney(HoaDon *HD, int n){
+	HoaDon Min = HD[0];
+	for (int i=0; i<n; i++){
+		if((Min.TongTienMoiHoaDon())>(HD[i].TongTienMoiHoaDon())){
+			Min = HD[i];
+		}
+	}
+	cout<<"Hoa don co tong gia tien it nhat: "<<endl;
+	Min.InHoaDon();
+	cout<<"----------------------------------------------"<<endl;
+	cout<<"Tong gia tien: "<<Min.TongTienMoiHoaDon()<<endl;
+}
+
+void MaxMoney(HoaDon *HD, int n){
+	HoaDon Max = HD[0];
+	for (int i=0; i<n; i++){
+		if((Max.TongTienMoiHoaDon())<(HD[i].TongTienMoiHoaDon())){
+			Max = HD[i];
+		}
+	}
+	cout<<"Hoa don co tong gia tien lon nhat: "<<endl;
+	Max.InHoaDon();
+	cout<<"----------------------------------------------"<<endl;
+	cout<<"Tong gia tien: "<<Max.TongTienMoiHoaDon()<<endl;
+}
+void TimKiem(HoaDon *HD, int n){
+	string CanTim;
+	cout<<"Nhap ten hoa don can tim: "; fflush(stdin); getline(cin, CanTim);
+	for (int i=0; i<n; i++){
+		if(CanTim == HD[i].getTenHoaDon()){
+			cout<<"Hoa don can tim:"<<endl;
+			HD[i].InHoaDon();
+		}
+	}
+}
+
+void menu(){
+	system("color A");
+	HoaDon *HD;
+	int n;
+	cout<<"Nhap so luong hoa don: "; cin>>n;
+	HD = new HoaDon[n];
+	int LuaChon;
+	while(true){
+	cout<<"1. Nhap danh sach"<<endl;
+	cout<<"2. Xuat danh sach"<<endl;
+	cout<<"3. Loc hoa don"<<endl;
+	cout<<"4. Tim kiem hoa don"<<endl;
+	cout<<"5. Thoat chuong trinh"<<endl;
+	cout<<"Nhap lua chon cua ban: (1-5): "; cin>>LuaChon;
+	switch(LuaChon){
+		case 1:
+			cout<<"Ban da lua chon nhap danh sach!"<<endl;
+			NhapDanhSach(HD,n);
+			cout<<"Da nhap thanh cong!"<<endl;
+			cout<<"Nhan phim bat ki de tiep tuc!"<<endl;
+			getch();
+			break;
+		case 2:
+			cout<<"Ban da lua chon xuat danh sach!"<<endl;
+			XuatDanhSach(HD,n);
+			cout<<"Nhan phim bat ki de tiep tuc!"<<endl;
+			getch();
+			break;
+		case 3:
+			cout<<"Ban da lua chon loc hoa don!"<<endl;
+			int LuaChon2;
+			cout<<"1. Hoa don co tong gia tien it nhat"<<endl;
+			cout<<"2. Hoa don co tong gia tien lon nhat"<<endl;
+			cout<<"Nhap lua chon cua ban: "; cin>>LuaChon2;
+			if(LuaChon2==1){
+				MinMoney(HD,n);
+			}else{
+				MaxMoney(HD,n);
+			}
+			cout<<"Nhan phim bat ki de tiep tuc!"<<endl;
+			getch();
+			break;
+		case 4:
+			cout<<"Ban da lua chon tim kiem hoa don!"<<endl;
+			TimKiem(HD,n);
+			cout<<"Nhan phim bat ki de tiep tuc!"<<endl;
+			getch();
+			break;
+		case 5:
+			cout<<"Ban da lua chon thoat chuong trinh!";
+			return;
+		default:
+			cout<<"Khong co chuc nang nay, vui long chon lai!!"<<endl;
+			cout<<"Nhan phim bat ki de tiep tuc!"<<endl;
+			getch();
+	}
+	}
+}
+
+int main (){
+	menu();
+}
